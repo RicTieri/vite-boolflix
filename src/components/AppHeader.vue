@@ -1,12 +1,21 @@
 <template>
-  <div>
+  <header>
     <h1>header</h1>
-  </div>
+    <input type="text">
+    <button>search</button>
+  </header>
 </template>
 
 <script>
 export default {
-  
+  data() {
+    return {
+      
+    }
+  },
+  methods: {
+    
+  },
 }
 </script>
 
