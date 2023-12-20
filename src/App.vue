@@ -1,6 +1,7 @@
 <template>
   <AppHeader @search="getSearch" />
-  <AppMain />
+  <AppMain 
+  :films="filmList"/>
 </template>
 
 <script>
@@ -15,9 +16,8 @@ export default {
   },
   data() {
     return {
-      apiUrl: 'https://api.themoviedb.org/3',
-      apiKey: 'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJlNGM5MmM0NzNiYmI1NmI3ZDhjMmVjM2EyNzkwYTA4MCIsInN1YiI6IjY1ODJjODA4ZjE3NTljNDEyYjEwYTVkMiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.j1wZCyGLSuFiO4DMNMVrnnTVg229tm3I2PkaHYYNfZI',
-      searchEndpoint: '/search/movie'
+      accessToken: 'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJlNGM5MmM0NzNiYmI1NmI3ZDhjMmVjM2EyNzkwYTA4MCIsInN1YiI6IjY1ODJjODA4ZjE3NTljNDEyYjEwYTVkMiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.j1wZCyGLSuFiO4DMNMVrnnTVg229tm3I2PkaHYYNfZI',
+      filmList: []
     }
   },
   methods: {
@@ -25,13 +25,18 @@ export default {
       axios.get('https://api.themoviedb.org/3/search/movie', {
         params: {
           query: text,
+          language: 'it-IT',
+          includes_adult: true,
+          page: 1
         },
         headers: {
-          Authorization: `Bearer ${this.apiKey}`,
+          Authorization: `Bearer ${this.accessToken}`,
         }
       })
         .then((response) => {
           console.log(response);
+          this.filmList = response.data.results;
+          console.log(this.filmList);                    
         })
         .catch(function (error) {
           console.error(error);
