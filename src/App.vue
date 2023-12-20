@@ -1,7 +1,8 @@
 <template>
   <AppHeader @search="getSearch" />
   <AppMain 
-  :films="filmList"/>
+  :films="filmList"
+  :series="serieList"/>
 </template>
 
 <script>
@@ -17,11 +18,16 @@ export default {
   data() {
     return {
       accessToken: 'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJlNGM5MmM0NzNiYmI1NmI3ZDhjMmVjM2EyNzkwYTA4MCIsInN1YiI6IjY1ODJjODA4ZjE3NTljNDEyYjEwYTVkMiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.j1wZCyGLSuFiO4DMNMVrnnTVg229tm3I2PkaHYYNfZI',
-      filmList: []
+      filmList: [],
+      serieList: []
     }
   },
   methods: {
-    getSearch(text) {
+    getSearch(text){
+      this.getFilm(text),
+      this.getSeries(text)
+    },
+    getFilm(text) {
       axios.get('https://api.themoviedb.org/3/search/movie', {
         params: {
           query: text,
@@ -37,6 +43,27 @@ export default {
           console.log(response);
           this.filmList = response.data.results;
           console.log(this.filmList);                    
+        })
+        .catch(function (error) {
+          console.error(error);
+        });
+    },
+    getSeries(text) {
+      axios.get('https://api.themoviedb.org/3/search/tv', {
+        params: {
+          query: text,
+          language: 'it-IT',
+          includes_adult: true,
+          page: 1
+        },
+        headers: {
+          Authorization: `Bearer ${this.accessToken}`,
+        }
+      })
+        .then((response) => {
+          console.log(response);
+          this.serieList = response.data.results;
+          console.log(this.serieList);                    
         })
         .catch(function (error) {
           console.error(error);
