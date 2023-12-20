@@ -10,8 +10,9 @@
       <span class="fi">
         <img :src="getFlag(film.original_language)" :alt="`lang: ${film.original_language}`" class="img-rounded">
       </span>
-      <p>{{ film.original_language }}</p>
-      <p>{{ film.vote_average }}</p>
+      <span class="rating-stars">
+        <img src="../assets/img/star-svgrepo-com.svg" alt="star"  v-for="i in getRate(film.vote_average)">
+      </span>
     </div>
   </section>
   <section>
@@ -25,8 +26,9 @@
       <span class="fi">
         <img :src="getFlag(serie.original_language)" :alt="`lang: ${serie.original_language}`" class="img-rounded">
       </span>
-      <p>{{ serie.original_language }}</p>
-      <p>{{ serie.vote_average }}</p>
+      <span class="rating-stars">
+        <img src="../assets/img/star-svgrepo-com.svg" alt="star"  v-for="i in getRate(serie.vote_average)">
+      </span>
     </div>
   </section>
 </template>
@@ -44,6 +46,9 @@ export default {
     },
     getCover(ref){
       return `https://image.tmdb.org/t/p/w300/${ref}`
+    },
+    getRate(num){
+      return Math.round(num / 2)
     }
   },
   props: {
@@ -59,8 +64,16 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .img-rounded{
   border-radius: 50%;
+}
+
+.rating-stars{
+  margin: 0 1rem;
+  img{
+    width: 20px;
+    margin: 0 .1rem;
+  }
 }
 </style>
