@@ -1,8 +1,8 @@
 <template>
   <header>
-    <h1>header</h1>
-    <input type="text">
-    <button>search</button>
+    <h1>BoolFlix</h1>
+    <input type="text" v-model="searchInput" id="searchBar" name="searchBar" @keyup.enter="doSearch">
+    <button @click="doSearch">search</button>
   </header>
 </template>
 
@@ -10,11 +10,13 @@
 export default {
   data() {
     return {
-      
+      searchInput: ''
     }
   },
   methods: {
-    
+    doSearch(){
+      this.$emit('search', this.searchInput)
+    }
   },
 }
 </script>

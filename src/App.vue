@@ -1,5 +1,5 @@
 <template>
-  <AppHeader />
+  <AppHeader @search="getSearch" />
   <AppMain />
 </template>
 
@@ -16,20 +16,18 @@ export default {
   data() {
     return {
       apiUrl: 'https://api.themoviedb.org/3',
-      accessToken: 'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJlNGM5MmM0NzNiYmI1NmI3ZDhjMmVjM2EyNzkwYTA4MCIsInN1YiI6IjY1ODJjODA4ZjE3NTljNDEyYjEwYTVkMiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.j1wZCyGLSuFiO4DMNMVrnnTVg229tm3I2PkaHYYNfZI',
+      apiKey: 'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJlNGM5MmM0NzNiYmI1NmI3ZDhjMmVjM2EyNzkwYTA4MCIsInN1YiI6IjY1ODJjODA4ZjE3NTljNDEyYjEwYTVkMiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.j1wZCyGLSuFiO4DMNMVrnnTVg229tm3I2PkaHYYNfZI',
       searchEndpoint: '/search/movie'
     }
   },
   methods: {
-    getRequest() {
+    getSearch(text) {
       axios.get('https://api.themoviedb.org/3/search/movie', {
         params: {
-          query: 'a',
-          page: 1,
+          query: text,
         },
         headers: {
-          'Authorization': 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJlNGM5MmM0NzNiYmI1NmI3ZDhjMmVjM2EyNzkwYTA4MCIsInN1YiI6IjY1ODJjODA4ZjE3NTljNDEyYjEwYTVkMiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.j1wZCyGLSuFiO4DMNMVrnnTVg229tm3I2PkaHYYNfZI',
-          'accept': 'application/json',
+          Authorization: `Bearer ${this.apiKey}`,
         }
       })
         .then((response) => {
@@ -42,7 +40,7 @@ export default {
 
   },
   created() {
-    this.getRequest()
+    this.getSearch()
   },
 }
 </script>
