@@ -47,7 +47,7 @@ export default {
     getSeries(text) {
       axios.get('https://api.themoviedb.org/3/search/tv', {
         params: {
-          api_key: this.accessToken,
+          api_key: this.apiUrl,
           query: text,
           language: 'it-IT',
           includes_adult: true,

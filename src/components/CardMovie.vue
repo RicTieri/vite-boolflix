@@ -12,6 +12,7 @@
           <img src="../assets/img/star-svgrepo-com.svg" alt="star" v-for="i in getRate(film.vote_average)">
         </span>
         <p class="overview">{{ getOverview(film.overview) }}</p>
+        <span @click="$emit('info_pop', film)">info</span>
       </div>
     </div>
   </article>
@@ -91,7 +92,7 @@ export default {
       }
 
       .overview {
-        padding-top: 2rem;
+        padding: 2rem 0;
         overflow: hidden;
       }
     }

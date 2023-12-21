@@ -3,25 +3,53 @@
     <section>
       <h2>Films</h2>
       <div class="section-wrapper">
-        <CardMovie v-for="film in films" :film="film" />
+        <CardMovie v-for="film in films" :film="film" 
+        @info_pop="openInfo(film.id)"/>
       </div>
     </section>
     <section>
       <h2>Series TV</h2>
       <div class="section-wrapper">
-        <CardSerie v-for="serie in series" :serie="serie" />
+        <CardSerie v-for="serie in series" :serie="serie" 
+        @info_pop="openInfo(serie.id)"/>
       </div>
     </section>
+    <CardInfo 
+    :id_cast="id_cast"
+    :open="info"/>
   </main>
 </template>
 
 <script>
 import CardMovie from './CardMovie.vue';
 import CardSerie from './CardSerie.vue';
+import CardInfo from './CardInfo.vue';
+import axios from 'axios';
 
 export default {
   data() {
-    return {};
+    return {
+      info: false,
+      apiUrl: 'e4c92c473bbb56b7d8c2ec3a2790a080',
+      id_cast: [],
+    };
+  },
+  methods: {
+    openInfo(id){
+      this.info = true;
+      axios.get(`https://api.themoviedb.org/3/movie/${id}/credits`, {
+        params: {
+          api_key: this.apiUrl,
+        }
+      })
+        .then((response) => {
+          console.log(this.id_cast)
+          this.id_cast = response.data.cast.slice(0,5);
+        })
+        .catch(function (error) {
+          console.error(error);
+        });
+    }
   },
   props: {
     films: {
@@ -35,7 +63,8 @@ export default {
   },
   components: {
     CardMovie,
-    CardSerie
+    CardSerie,
+    CardInfo
   }
 }
 </script>
@@ -48,11 +77,14 @@ main {
   background-color: rgba(0, 0, 0, 0.74);
   height: calc(100vh - 60px);
   overflow-y: auto;
+  position: relative;
+
 }
 
 section {
-  margin: 0 0 3rem;
+  margin: 0 .5rem 3rem;
   padding: .5rem 1rem;
+  border-radius: 10px;
   background-color: rgba(0, 0, 0, 0.74);
   box-shadow: 0 0 20px 10px rgba(0, 0, 0, 0.463);
 
