@@ -1,8 +1,9 @@
 <template>
   <div class="info_popup" :class="(open)?'active':''" >
     <span @click="open = !open">&cross;</span>
+    <p>Cast:</p>
       <p v-for="actor in id_cast">
-        {{ actor.original_name }}
+        {{ actor.name }}
       </p>
     </div>
 </template>
