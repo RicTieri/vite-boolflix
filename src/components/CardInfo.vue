@@ -1,9 +1,13 @@
 <template>
   <div class="info_popup" :class="(open)?'active':''" >
     <span @click="open = !open">&cross;</span>
-    <p>Cast:</p>
+    <h4>Cast:</h4>
       <p v-for="actor in id_cast">
         {{ actor.name }}
+      </p>
+      <h4>Generi:</h4>
+      <p v-for="genre in genres.slice(0, 5)">
+        {{ genre.name }}
       </p>
     </div>
 </template>
@@ -11,6 +15,10 @@
 export default {
   props:{
     id_cast:{
+      type: Array,
+      required: true
+    },
+    genres:{
       type: Array,
       required: true
     },
@@ -34,6 +42,10 @@ export default {
     border-radius: 10px;
     &.active{
       display: block;
+    }
+
+    h4{
+      margin: .5rem 0;
     }
   }
 </style>

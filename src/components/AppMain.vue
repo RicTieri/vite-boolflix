@@ -1,8 +1,8 @@
 <template>
   <main>
     <div>
-      <select name="genres" id="genres">
-        <option v-for="genre in getMixedGenres()" value="">
+      <select name="genres" id="genres" @change="">
+        <option v-for="genre in getMixedGenres()" :value="genre.id">
           {{ genre.name }}
         </option>
       </select>
@@ -19,7 +19,7 @@
         <CardSerie v-for="serie in series" :serie="serie" @info_pop="openInfo(serie)" />
       </div>
     </section>
-    <CardInfo :id_cast="id_cast" :open="info" />
+    <CardInfo :id_cast="id_cast" :open="info" :genres="genreSearch"/>
   </main>
 </template>
 
@@ -37,13 +37,16 @@ export default {
       id_cast: [],
       movieGenres: [],
       serieGenres: [],
+      genreSearch: []
     };
   },
   created() {
-    this.getGenres()
+    this.getGenres();
+    this.getMixedGenres()
   },
   methods: {
     openInfo(choice) {
+      this.genreConvert(choice.genre_ids, this.getMixedGenres(), this.genreSearch);
       this.info = true;
       axios.get(`https://api.themoviedb.org/3/movie/${choice.id}/credits`, {
         params: {
@@ -64,31 +67,35 @@ export default {
         }
       })
         .then((response) => {
-          console.log(response);
           this.movieGenres = response.data.genres;
         })
         .catch(function (error) {
           console.error(error);
         });
-      axios.get('https://api.themoviedb.org/3/genre/tv/list', {
-        params: {
-          api_key: this.apiUrl,
-        }
-      })
+        axios.get('https://api.themoviedb.org/3/genre/tv/list', {
+          params: {
+            api_key: this.apiUrl,
+          }
+        })
         .then((response) => {
-          console.log(response);
           this.serieGenres = response.data.genres;
         })
         .catch(function (error) {
           console.error(error);
         });
-    },
+      },
     getMixedGenres() {
       const allGenres = [...this.serieGenres, ...this.movieGenres];
       const uniqueGenres = allGenres.filter((genre, index, array) => {
         return index === array.findIndex(g => g.id === genre.id);
       });
-      return uniqueGenres;
+      return uniqueGenres
+    },
+    genreConvert(choice, array, output){
+      choice.forEach((i)=>{
+        let match = array.find(g => g.id === i);
+        output.push(match)
+      })
     }
   },
   props: {
