@@ -4,7 +4,7 @@
     <div class="caption">
       <div class="caption-wrap">
         <h3>{{ film.title }}</h3>
-        <h5>{{ film.original_title }}</h5>
+        <h5 v-if="film.title !== film.original_title">{{ film.original_title }}</h5>
         <span class="fi">
           <img :src="getFlag(film.original_language)" :alt="`lang: ${film.original_language}`" class="img-rounded">
         </span>

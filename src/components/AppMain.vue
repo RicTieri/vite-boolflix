@@ -22,7 +22,7 @@
         <p v-if="filteredSeries.length === 0">No results found for the selected genre.</p>
       </div>
     </section>
-    <CardInfo :id_cast="id_cast" :open="info" :genres="infoGenre" />
+    <CardInfo :id_cast="infoCast" :open="info" :genres="infoGenre" />
   </main>
 </template>
 
@@ -35,13 +35,14 @@ import axios from 'axios';
 export default {
   data() {
     return {
-      info: false,
       apiUrl: 'e4c92c473bbb56b7d8c2ec3a2790a080',
-      id_cast: [],
       movieGenres: [],
       serieGenres: [],
+      selectedGenre: '',
+      info: false,
+      infoCast: [],
+      infoGeneral: [],
       infoGenre: [],
-      selectedGenre: ''
     };
   },
   created() {
@@ -50,7 +51,10 @@ export default {
   },
   methods: {
     openInfo(choice) {
+      this.infoGenre = [];
       this.genreConvert(choice.genre_ids, this.getMixedGenres(), this.infoGenre);
+      this.infoGeneral = choice;
+      console.log(choice)
       this.info = true;
       axios.get(`https://api.themoviedb.org/3/movie/${choice.id}/credits`, {
         params: {
@@ -58,7 +62,7 @@ export default {
         }
       })
         .then((response) => {
-          this.id_cast = response.data.cast.slice(0, 5);
+          this.infoCast = response.data.cast.slice(0, 5);
         })
         .catch(function (error) {
           console.error(error);
@@ -153,8 +157,9 @@ main {
 
 .navSection{
   text-align: right;
+  margin-bottom: 1rem;
   select{
-    background-color: transparent;
+    background-color: rgba(0, 0, 0, 0.74);
     color: white;
     border-radius: 8px;
     padding: .25rem;

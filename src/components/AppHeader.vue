@@ -32,6 +32,7 @@ header {
   height: 60px;
   background-color: rgba(0, 0, 0, 0.84);
   box-shadow: 0 0 20px 10px rgba(0, 0, 0, 0.235);
+  box-shadow: inset 0 0 20px 10px rgba(0, 0, 0, 0.235);
 
   h1 {
     color: red;

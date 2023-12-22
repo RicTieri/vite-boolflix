@@ -4,7 +4,7 @@
     <div class="caption">
       <div class="caption-wrap">
         <h3>{{ serie.name }}</h3>
-        <h5>{{ serie.original_name }}</h5>
+        <h5 v-if="serie.name !== serie.original_name">{{ serie.original_name }}</h5>
         <span class="fi">
           <img :src="getFlag(serie.original_language)" :alt="`lang: ${serie.original_language}`" class="img-rounded">
         </span>
