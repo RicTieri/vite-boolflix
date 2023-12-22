@@ -40,6 +40,7 @@ header {
   nav {
     #searchBar {
       background-color: transparent;
+      color: white;
       box-shadow: 0 0 20px 10px rgba(0, 0, 0, 0.235);
       border: 1px solid rgba(128, 128, 128, 0.507);
       border-radius: 10px;

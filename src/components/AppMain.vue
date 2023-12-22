@@ -1,25 +1,28 @@
 <template>
   <main>
-    <div>
-      <select name="genres" id="genres" @change="">
+    <section class="navSection">
+      <select name="genres" id="genres" v-model="selectedGenre" @change="searchByGender(selectedGenre)">
+        <option value="">All Genres</option>
         <option v-for="genre in getMixedGenres()" :value="genre.id">
           {{ genre.name }}
         </option>
       </select>
-    </div>
+    </section>
     <section>
       <h2>Films</h2>
       <div class="section-wrapper">
-        <CardMovie v-for="film in films" :film="film" @info_pop="openInfo(film)" />
+        <CardMovie v-for="film in filteredFilms" :film="film" @info_pop="openInfo(film)" />
+        <p v-if="filteredFilms.length === 0">No results found for the selected genre.</p>
       </div>
     </section>
     <section>
       <h2>Series TV</h2>
       <div class="section-wrapper">
-        <CardSerie v-for="serie in series" :serie="serie" @info_pop="openInfo(serie)" />
+        <CardSerie v-for="serie in filteredSeries" :serie="serie" @info_pop="openInfo(serie)" />
+        <p v-if="filteredSeries.length === 0">No results found for the selected genre.</p>
       </div>
     </section>
-    <CardInfo :id_cast="id_cast" :open="info" :genres="genreSearch"/>
+    <CardInfo :id_cast="id_cast" :open="info" :genres="infoGenre" />
   </main>
 </template>
 
@@ -37,7 +40,8 @@ export default {
       id_cast: [],
       movieGenres: [],
       serieGenres: [],
-      genreSearch: []
+      infoGenre: [],
+      selectedGenre: ''
     };
   },
   created() {
@@ -46,7 +50,7 @@ export default {
   },
   methods: {
     openInfo(choice) {
-      this.genreConvert(choice.genre_ids, this.getMixedGenres(), this.genreSearch);
+      this.genreConvert(choice.genre_ids, this.getMixedGenres(), this.infoGenre);
       this.info = true;
       axios.get(`https://api.themoviedb.org/3/movie/${choice.id}/credits`, {
         params: {
@@ -72,18 +76,18 @@ export default {
         .catch(function (error) {
           console.error(error);
         });
-        axios.get('https://api.themoviedb.org/3/genre/tv/list', {
-          params: {
-            api_key: this.apiUrl,
-          }
-        })
+      axios.get('https://api.themoviedb.org/3/genre/tv/list', {
+        params: {
+          api_key: this.apiUrl,
+        }
+      })
         .then((response) => {
           this.serieGenres = response.data.genres;
         })
         .catch(function (error) {
           console.error(error);
         });
-      },
+    },
     getMixedGenres() {
       const allGenres = [...this.serieGenres, ...this.movieGenres];
       const uniqueGenres = allGenres.filter((genre, index, array) => {
@@ -91,12 +95,31 @@ export default {
       });
       return uniqueGenres
     },
-    genreConvert(choice, array, output){
-      choice.forEach((i)=>{
+    genreConvert(choice, array, output) {
+      choice.forEach((i) => {
         let match = array.find(g => g.id === i);
         output.push(match)
       })
+    },
+    searchByGender(selected) {
+      this.selectedGenre = selected;
     }
+  },
+  computed: {
+    filteredFilms() {
+      if (!this.selectedGenre) {
+        return this.films;
+      } else {
+        return this.films.filter(film => film.genre_ids.includes(parseInt(this.selectedGenre)));
+      }
+    },
+    filteredSeries() {
+      if (!this.selectedGenre) {
+        return this.series;
+      } else {
+        return this.series.filter(serie => serie.genre_ids.includes(parseInt(this.selectedGenre)));
+      }
+    },
   },
   props: {
     films: {
@@ -128,6 +151,16 @@ main {
 
 }
 
+.navSection{
+  text-align: right;
+  select{
+    background-color: transparent;
+    color: white;
+    border-radius: 8px;
+    padding: .25rem;
+  }
+}
+
 section {
   margin: 0 .5rem 3rem;
   padding: .5rem 1rem;
@@ -145,6 +178,10 @@ section {
     gap: 1rem;
     overflow-x: auto;
     padding: 1rem .75rem;
+
+    >p {
+      color: white;
+    }
   }
 }
 </style>
